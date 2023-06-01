@@ -1,3 +1,55 @@
 # Self-Consistency
 
-Needs translation! Feel free to contribute a translating by clicking the `Edit this page` button on the right side.
+Muhtemelen prompt mühendisliği için mevcut olan daha ileri tekniklerden biri, kendi tutarlılığıdır. Wang ve ark. tarafından (2022) önerilen kendi tutarlılığı, "düşünce zinciri prompt'ında kullanılan saf açgözlü çözücü kodlamayı değiştirmeyi" amaçlamaktadır. Fikir, az sayıda denemeyle CoT üzerinde çeşitli akıl yürütme yollarını örnekleme yaparak ve üretilen sonuçları en tutarlı cevabı seçmek için kullanmaktır. Bu, aritmetik ve sağduyu akıl yürütme içeren görevlerde CoT prompt'ın performansını artırmaya yardımcı olur.
+
+Aritmetik akıl yürütme için aşağıdaki örneği deneyelim:
+
+Prompt:
+
+Ben 6 yaşındayken kız kardeşim benim yaşımın yarısıydı. Şimdi ben 70 yaşındayım, kız kardeşim kaç yaşında?
+Çıktı:
+
+35
+Çıktı yanlış! Bu sorunu kendi tutarlılığıyla nasıl iyileştirebiliriz? Hadi deneyelim. Wang ve ark. (2022) tarafından kullanılan az sayıda örneklemeyi kullanacağız (Tablo 17):
+
+Prompt:
+
+Soru: Koruda 15 ağaç var. Koru işçileri bugün koruya ağaç dikmeye gidecek. İş bittikten sonra
+koruda 21 ağaç olacak. Koru işçileri bugün kaç ağaç diktiler?
+Cevap: 15 ağaçla başlıyoruz. Sonra 21 ağaç oluyoruz. Fark dikilen ağaç sayısı olmalı.
+Yani, onlar 21 - 15 = 6 ağaç dikmiş olmalılar. Cevap 6'dır.
+
+Soru: Otoparkta 3 araba var ve 2 araba daha geliyor, otoparkta kaç araba var?
+Cevap: Otoparkta zaten 3 araba var. 2 tane daha geliyor. Şimdi toplamda 3 + 2 = 5 araba var. Cevap 5'tir.
+
+Soru: Leah'ın 32 çikolatası vardı ve kız kardeşi 42 çikolataya sahipti. 35 tanesini yediklerinde, toplamda kaç parça çikolata kaldı?
+Cevap: Leah'ın 32 çikolatası vardı ve Leah'ın kız kardeşi 42 çikolataya sahipti. Bu, başlangıçta 32 + 42 = 74
+çikolata olduğu anlamına geliyor. 35 tanesi yenmiş. Bu nedenle toplamda hala 74 - 35 = 39 çikolata kaldı. Cevap 39'dur.
+
+Soru: Jason'ın 20 şekerlemesi vardı. Denny'ye bazı şekerlemeler verdi. Şimdi Jason'ın 12 şekerlemesi var. Jason Denny'ye kaç şekerleme verdi?
+Cevap: Jason'ın 20 şekerlemesi vardı. Şu an sadece 12 tane var, bu yüzden geri kalanını Denny'ye vermiş olmalı. Denny'ye verdiği şekerleme sayısı 20 - 12 = 8 şekerleme olmalı. Cevap 8'dir.
+
+Soru: Shawn'in beş oyuncağı var. Noel için, annesinden ve babasından her birinden ikişer oyuncak aldı. Şimdi kaç oyuncak var?
+Cevap: 5 oyuncağı var. Annesinden 2 tane aldı, bu yüzden ondan sonra 5 + 2 = 7 oyuncağı oldu. Sonra babasından 2 tane daha aldı, bu yüzden toplamda 7 + 2 = 9 oyuncağı var. Cevap 9'dur.
+
+Soru: Sunucu odasında dokuz bilgisayar vardı. Pazartesiden perşembeye kadar her gün beş bilgisayar kuruldu. Şu anda sunucu odasında kaç bilgisayar var?
+Cevap: Pazartesiden perşembeye kadar 4 gün var. Her gün 5 bilgisayar eklendi. Bu toplamda 4 * 5 =
+20 bilgisayar eklenmiş demektir. Başlangıçta 9 bilgisayar vardı, bu yüzden şu anda 9 + 20 = 29 bilgisayar var. Cevap 29'dur.
+
+Soru: Michael'ın 58 golf topu vardı. Salı günü 23 golf topu kaybetti. Çarşamba günü 2 tane daha kaybetti. Çarşamba günü sonunda kaç golf topu kaldı?
+Cevap: Michael başlangıçta 58 topa sahipti. Salı günü 23 tanesini kaybetti, bu yüzden ondan sonra 58 - 23 = 35 topu oldu. Çarşamba günü 2 tane daha kaybetti, bu yüzden şimdi 35 - 2 = 33 topu var. Cevap 33'tür.
+
+Soru: Olivia'nın 23 doları var. 5 adet simit alıyor ve simit başına 3 dolar ödüyor. Ne kadar parası kaldı?
+Cevap: 5 simit alıyor ve her biri için 3 dolar harcıyor. Bu, toplamda 5 * 3 = 15 dolar harcadığı anlamına geliyor. Başlangıçta 23 doları vardı, bu yüzden kalan parası 23 - 15 = 8 dolar oluyor. Cevap 8'dir.
+
+Soru: Ben 6 yaşındayken kız kardeşim benim yaşımın yarısıydı. Şimdi ben 70 yaşındayım, kız kardeşim kaç yaşında?
+Cevap 1:
+
+Ben 6 yaşındayken kız kardeşim benim yaşımın yarısı olduğu için o 3 yaşındaydı. Şimdi ben 70 yaşındayım, bu yüzden o 70 - 3 = 67 yaşında olmalı. Cevap 67'dir.
+Cevap 2:
+
+Anlatıcı 6 yaşındayken kız kardeşi yaşının yarısı olan 3 yaşındaydı. Şimdi anlatıcı 70 yaşında olduğuna göre, kız kardeşi 70 - 3 = 67 yaşında olurdu. Cevap 67'dir.
+Cevap 3:
+
+Ben 6 yaşındayken kız kardeşim benim yaşımın yarısı olduğu için o 3 yaşındaydı. Şimdi ben 70 yaşındayım, bu yüzden o 70/2 = 35 yaşında olmalı. Cevap 35'tir.
+Sonucu bulmak için birkaç adım gerekmektedir (detaylar için makaleye bakın), ancak basitlik açısından çoğunlukla ortaya çıkan bir cevap olduğunu görebiliriz ve bu nihai cevap olur.
